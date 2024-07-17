@@ -1,0 +1,78 @@
+class Graph {
+    constructor() {
+        this.adjacencyList = {};
+    }
+
+    addVertex(vertex) {
+        if (!this.adjacencyList[vertex]) {
+            this.adjacencyList[vertex] = [];
+        }
+    }
+
+    addEdge(v1, v2) {
+        this.adjacencyList[v1].push(v2);
+        this.adjacencyList[v2].push(v1);
+    }
+
+    bfs(start) {
+        const queue = [start];
+        const result = [];
+        const visited = {};
+        visited[start] = true;
+
+        while (queue.length) {
+            let currentVertex = queue.shift();
+            result.push(currentVertex);
+            this.adjacencyList[currentVertex].forEach((neighbor => {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    queue.push(neighbor);
+                }
+            }));
+        }
+
+        return result;
+    }
+
+    dfs(start) {
+        const stack = [start];
+        const visited = new Set();
+        const result = [];
+
+        while (stack.length) {
+            const vertex = stack.pop();
+
+            if (!visited.has(vertex)) {
+                visited.add(vertex);
+                result.push(vertex);
+
+                for (const neighbor of this.adjacencyList[vertex]) {
+                    stack.push(neighbor);
+                }
+            }
+        }
+
+        return result;
+    }
+}
+
+const graph = new Graph();
+
+graph.addVertex('A');
+graph.addVertex('B');
+graph.addVertex('C');
+graph.addVertex('D');
+graph.addVertex('E');
+graph.addVertex('F');
+
+graph.addEdge('A', 'B');
+graph.addEdge('A', 'C');
+graph.addEdge('E', 'B');
+graph.addEdge('C', 'F');
+graph.addEdge('E', 'F');
+graph.addEdge('E', 'D');
+
+const result1 = graph.bfs('A');
+const result2 = graph.dfs('A');
+console.log(result1)
+console.log(result2)
